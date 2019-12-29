@@ -5,14 +5,26 @@
  */
 package pl.kie.uslugisieciowe.sentanalysisservice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Singleton;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * REST Web Service
@@ -32,8 +44,7 @@ public class SentAnalysisService {
     // kolejcja przechowująca obiekty filmów
     // klucz to id filmu, wartość to konkretny obiekt
     private Map<String, Movie> moviesMap;
-    
-    
+
     /**
      * Creates a new instance of SentAnalysisService
      */
@@ -57,6 +68,123 @@ public class SentAnalysisService {
         Movie m4 = new Movie("It", "Andy Muschietti");
         moviesMap.put(m4.getId(), m4);
     }
-   
+
+    @GET
+    @Path("movie/{movie_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getMovie(@PathParam("movie_id") String movieId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(this.moviesMap.get(movieId));
+    }
+
+//    @POST
+//    @Path("movieReview/{movie_id}")
+//    @Consumes(MediaType.TEXT_PLAIN)
+//    public Response.ResponseBuilder sendReview(String content, @PathParam("movie_id") String movieId) throws IOException, URISyntaxException {
+//        ObjectMapper mapper = new ObjectMapper();
+//        int positiveWords=0;
+//        int negativeWords=0;
+//        for(String word: wordsPositive) {
+//            if (content.contains(word))
+//                positiveWords=positiveWords+1;
+//        }
+//        for(String word: wordsNegative) {
+//            if (content.contains(word))
+//                positiveWords=positiveWords+1;
+//        }
+//        if (positiveWords>negativeWords) {
+//            Movie movie = moviesMap.get(movieId);
+//            int newCounter = movie.getPositiveSentimentCoutner();
+//            newCounter = newCounter+1;
+//          //  Response res = Response.created(new URI("POSITIVE"));
+//            return Response.created(new URI("POSITIVE"));
+//            
+//            
+//        }
+//        else if (positiveWords<negativeWords) {
+//            Movie movie = moviesMap.get(movieId);
+//            int newCounter = movie.getNegativeSentimentCounter();
+//            newCounter = newCounter+1;
+//            return Response.created(new URI("NEGATIVE"));
+//        }
+//        else{
+//            return Response.created(new URI("NEUTRAL")); 
+//        }
+//     }
+
+
+
     
+    @POST
+    @Path("movieReview/{movie_id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response sendReview(String content, @PathParam("movie_id") String movieId) throws IOException, URISyntaxException {
+        ObjectMapper mapper = new ObjectMapper();
+          Movie movie = mapper.readValue(content, Movie.class);
+        moviesMap.put(movie.getId(), movie);
+        return Response.created(new URI("xmassongs/" + String.valueOf(movie.getId()))).build();
+    }
+        
+        
+        
+        
+        
+        
+//        int positiveWords=0;
+//        int negativeWords=0;
+//        for(String word: wordsPositive) {
+//            if (content.contains(word))
+//                positiveWords=positiveWords+1;
+//        }
+//        for(String word: wordsNegative) {
+//            if (content.contains(word))
+//                positiveWords=positiveWords+1;
+//        }
+//        if (positiveWords>negativeWords) {
+//            Movie movie = moviesMap.get(movieId);
+//            int newCounter = movie.getPositiveSentimentCoutner();
+//            newCounter = newCounter+1;
+//          //  Response res = Response.created(new URI("POSITIVE"));
+//            return Response.created(new URI("POSITIVE"));
+//            
+//            
+//        }
+//        else if (positiveWords<negativeWords) {
+//            Movie movie = moviesMap.get(movieId);
+//            int newCounter = movie.getNegativeSentimentCounter();
+//            newCounter = newCounter+1;
+//            return Response.created(new URI("NEGATIVE"));
+//        }
+//        else{
+//            return Response.created(new URI("NEUTRAL")); 
+//        }
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

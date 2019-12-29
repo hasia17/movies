@@ -29,7 +29,6 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(pl.kie.uslugisieciowe.sentanalysisservice.GenericResource.class);
         resources.add(pl.kie.uslugisieciowe.sentanalysisservice.SentAnalysisService.class);
     }
     
