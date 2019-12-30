@@ -116,13 +116,14 @@ public class SentAnalysisService {
 
     
     @POST
-    @Path("movieReview/{movie_id}")
+    @Path("movie")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response sendReview(String content, @PathParam("movie_id") String movieId) throws IOException, URISyntaxException {
+    public Response sendReview(String content) throws IOException, URISyntaxException {
         ObjectMapper mapper = new ObjectMapper();
-          Movie movie = mapper.readValue(content, Movie.class);
-        moviesMap.put(movie.getId(), movie);
-        return Response.created(new URI("xmassongs/" + String.valueOf(movie.getId()))).build();
+        // deserializujemy obiekt wypożyczenia
+        Movie rsd = mapper.readValue(content, Movie.class);
+      moviesMap.put(rsd.getId(), rsd);
+    return Response.created(new URI("generic/rents/" + rsd.getId())).build();
     }
         
         
