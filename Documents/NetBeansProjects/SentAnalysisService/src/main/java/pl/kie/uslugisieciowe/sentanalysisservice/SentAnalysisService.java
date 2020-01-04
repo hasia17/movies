@@ -78,10 +78,6 @@ public class SentAnalysisService {
     }
 
 
-
-
-
-    
     @POST
     @Path("movieReview/{movie_id}")
     @Consumes(MediaType.TEXT_PLAIN)
