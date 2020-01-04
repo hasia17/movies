@@ -77,90 +77,43 @@ public class SentAnalysisService {
         return mapper.writeValueAsString(this.moviesMap.get(movieId));
     }
 
-//    @POST
-//    @Path("movieReview/{movie_id}")
-//    @Consumes(MediaType.TEXT_PLAIN)
-//    public Response.ResponseBuilder sendReview(String content, @PathParam("movie_id") String movieId) throws IOException, URISyntaxException {
-//        ObjectMapper mapper = new ObjectMapper();
-//        int positiveWords=0;
-//        int negativeWords=0;
-//        for(String word: wordsPositive) {
-//            if (content.contains(word))
-//                positiveWords=positiveWords+1;
-//        }
-//        for(String word: wordsNegative) {
-//            if (content.contains(word))
-//                positiveWords=positiveWords+1;
-//        }
-//        if (positiveWords>negativeWords) {
-//            Movie movie = moviesMap.get(movieId);
-//            int newCounter = movie.getPositiveSentimentCoutner();
-//            newCounter = newCounter+1;
-//          //  Response res = Response.created(new URI("POSITIVE"));
-//            return Response.created(new URI("POSITIVE"));
-//            
-//            
-//        }
-//        else if (positiveWords<negativeWords) {
-//            Movie movie = moviesMap.get(movieId);
-//            int newCounter = movie.getNegativeSentimentCounter();
-//            newCounter = newCounter+1;
-//            return Response.created(new URI("NEGATIVE"));
-//        }
-//        else{
-//            return Response.created(new URI("NEUTRAL")); 
-//        }
-//     }
+
 
 
 
     
     @POST
-    @Path("movie")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response sendReview(String content) throws IOException, URISyntaxException {
+    @Path("movieReview/{movie_id}")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public String sendReview(String content, @PathParam("movie_id") String movieId) throws IOException, URISyntaxException {
         ObjectMapper mapper = new ObjectMapper();
-        // deserializujemy obiekt wypożyczenia
-        Movie rsd = mapper.readValue(content, Movie.class);
-      moviesMap.put(rsd.getId(), rsd);
-    return Response.created(new URI("generic/rents/" + rsd.getId())).build();
+        
+        int positiveWords=0;
+        int negativeWords=0;
+        for(String word: wordsPositive) {
+            if (content.contains(word))
+                positiveWords++;
+        }
+        for(String word: wordsNegative) {
+            if (content.contains(word))
+                negativeWords++;
+        }
+        if (positiveWords>negativeWords) {
+            Movie movie = moviesMap.get(movieId);
+            movie.recordPositiveSentimentReview();
+            return mapper.writeValueAsString("POSITIVE");
+            
+        }
+        else if (positiveWords<negativeWords) {
+            Movie movie = moviesMap.get(movieId);
+            movie.recordNegativeSentimentReview();
+            return mapper.writeValueAsString("NEGATIVE");
+        }
+        else{
+            return mapper.writeValueAsString("NEUTRAL");
+        }
+     
     }
-        
-        
-        
-        
-        
-        
-//        int positiveWords=0;
-//        int negativeWords=0;
-//        for(String word: wordsPositive) {
-//            if (content.contains(word))
-//                positiveWords=positiveWords+1;
-//        }
-//        for(String word: wordsNegative) {
-//            if (content.contains(word))
-//                positiveWords=positiveWords+1;
-//        }
-//        if (positiveWords>negativeWords) {
-//            Movie movie = moviesMap.get(movieId);
-//            int newCounter = movie.getPositiveSentimentCoutner();
-//            newCounter = newCounter+1;
-//          //  Response res = Response.created(new URI("POSITIVE"));
-//            return Response.created(new URI("POSITIVE"));
-//            
-//            
-//        }
-//        else if (positiveWords<negativeWords) {
-//            Movie movie = moviesMap.get(movieId);
-//            int newCounter = movie.getNegativeSentimentCounter();
-//            newCounter = newCounter+1;
-//            return Response.created(new URI("NEGATIVE"));
-//        }
-//        else{
-//            return Response.created(new URI("NEUTRAL")); 
-//        }
-    // }
-
 
 
 
